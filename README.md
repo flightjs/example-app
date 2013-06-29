@@ -1,4 +1,5 @@
-###tests for demo app
-[![Build Status](https://travis-ci.org/twitter/flight.png?branch=gh-pages)](http://travis-ci.org/twitter/flight)
+# Flight example app
 
-[Full README](https://github.com/twitter/flight/blob/master/README.md)
+[![Build Status](https://travis-ci.org/flightjs/example-app.png?branch=master)](http://travis-ci.org/flightjs/example-app)
+
+An example Flight application.
