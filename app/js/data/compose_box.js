@@ -4,9 +4,9 @@ define(
 
   [
     'flight/lib/component',
-    'components/mustache/mustache',
-    'app/data',
-    'app/templates'
+    'mustache/mustache',
+    'data',
+    'templates'
   ],
 
   function(defineComponent, Mustache, dataStore, templates) {

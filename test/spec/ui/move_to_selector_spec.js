@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_ui/move_to_selector', function() {
+describeComponent('ui/move_to_selector', function() {
   beforeEach(function () {
     setupComponent(readFixtures('move_to_selector.html'), {
       moveActionSelector: '#move_mail'

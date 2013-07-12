@@ -1,7 +1,8 @@
 requirejs.config({
-  baseUrl: '',
+  baseUrl: 'app/js',
   paths: {
-    'flight': 'components/flight'
+    'flight': '/components/flight',
+    'mustache': '/components/mustache'
   }
 });
 
@@ -17,7 +18,7 @@ require(
   function(compose, registry, advice, withLogging, debug) {
     debug.enable(true);
     compose.mixin(registry, [advice.withAdvice, withLogging]);
-    require(['app/boot/page'], function(initialize) {
+    require(['boot/page'], function(initialize) {
       initialize();
     });
   }

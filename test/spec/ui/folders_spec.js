@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_ui/folders', function() {
+describeComponent('ui/folders', function() {
   beforeEach(function() {
     setupComponent();
   });

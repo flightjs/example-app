@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_ui/mail_controls', function() {
+describeComponent('ui/mail_controls', function() {
   beforeEach(function () {
     setupComponent(readFixtures('mail_controls.html'));
   });

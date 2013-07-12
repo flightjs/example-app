@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_data/move_to', function() {
+describeComponent('data/move_to', function() {
   beforeEach(function() {
     setupComponent(
       {

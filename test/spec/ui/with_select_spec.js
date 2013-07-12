@@ -1,6 +1,6 @@
 "use strict";
 
-describeMixin('app/component_ui/with_select', function() {
+describeMixin('ui/with_select', function() {
   beforeEach(function() {
     setupComponent(readFixtures('mail_items.html'), {
       selectedItemSelector: 'tr.mail-item.selected',

@@ -3,14 +3,14 @@
 define(
 
   [
-    'app/component_data/mail_items',
-    'app/component_data/compose_box',
-    'app/component_data/move_to',
-    'app/component_ui/mail_items',
-    'app/component_ui/mail_controls',
-    'app/component_ui/compose_box',
-    'app/component_ui/folders',
-    'app/component_ui/move_to_selector'
+    'data/mail_items',
+    'data/compose_box',
+    'data/move_to',
+    'ui/mail_items',
+    'ui/mail_controls',
+    'ui/compose_box',
+    'ui/folders',
+    'ui/move_to_selector'
   ],
 
   function(

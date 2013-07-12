@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_data/compose_box', function() {
+describeComponent('data/compose_box', function() {
   beforeEach(function() {
     setupComponent(
       {

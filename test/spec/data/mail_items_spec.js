@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_data/mail_items', function() {
+describeComponent('data/mail_items', function() {
   beforeEach(function() {
     setupComponent(
       {

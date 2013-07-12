@@ -1,6 +1,6 @@
 "use strict";
 
-describeComponent('app/component_ui/mail_items', function() {
+describeComponent('ui/mail_items', function() {
   beforeEach(function() {
     setupComponent('<div id="container"></>', {
       itemContainerSelector: '#container',
