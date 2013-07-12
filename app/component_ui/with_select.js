@@ -6,12 +6,14 @@ define(
 
     return withSelect;
 
+    //a function to be in voked in the context of an existing component
     function withSelect() {
-
+      //attributes that are not expected to be modified, but can be overriden during attachTo
       this.defaultAttrs({
         selectedIds: []
       });
 
+      //register current selections
       this.initializeSelections = function() {
         this.select('selectedItemSelector').toArray().forEach(function(el) {
           this.attr.selectedIds.push(el.getAttribute('id'));
@@ -33,6 +35,7 @@ define(
         }
       };
 
+      //visually select item and let other components know about it
       this.selectItem = function($item, append) {
         if (!append) {
           this.select('selectedItemSelector').removeClass(this.attr.selectedClass);
@@ -44,6 +47,7 @@ define(
         this.trigger(this.attr.selectionChangedEvent, {selectedIds: this.attr.selectedIds});
       };
 
+      //visually unselect item and let other components know about it
       this.unselectItem = function($item) {
         $item.removeClass(this.attr.selectedClass);
 
@@ -52,6 +56,7 @@ define(
         this.trigger(this.attr.selectionChangedEvent, {selectedIds: this.attr.selectedIds});
       };
 
+     //code to be run when the instance is created
       this.after("initialize", function() {
         this.on('click', {
           'itemSelector': this.toggleItemSelect

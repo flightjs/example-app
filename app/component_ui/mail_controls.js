@@ -6,10 +6,11 @@ define(
   ],
 
   function(defineComponent) {
-
+    //create a component constructor augmented by the composeBox function and withSelect mixin
     return defineComponent(mailControls);
 
     function mailControls() {
+      //attributes that are not expected to be modified, but can be overriden during attachTo
       this.defaultAttrs({
         //selectors
         actionControlsSelector: 'button.mail-action',
@@ -35,31 +36,37 @@ define(
         }
       };
 
+      //message that user wants to delete mail
       this.deleteMail = function(ev, data) {
         this.trigger('uiDeleteMail');
       };
 
+      //message that user wants to move mail
       this.moveMail = function(ev, data) {
         this.trigger('uiMoveMail');
       };
 
+      //message that user wants to forward mail
       this.forwardMail = function(ev, data) {
         this.trigger('uiForwardMail');
       };
 
+      //message that user wants to reply to mail
       this.replyToMail = function(ev, data) {
         this.trigger('uiReplyToMail');
       };
 
+      //code to be run when the instance is created
       this.after('initialize', function() {
+        this.on(document, 'uiMailItemSelectionChanged', this.restyleOnSelectionChange);
+        this.on(document, 'uiFolderSelectionChanged', this.disableAll);
+        //delegate to specific handler based on event target
         this.on('.mail-action', 'click', {
           'deleteControlSelector': this.deleteMail,
           'moveControlSelector': this.moveMail,
           'forwardControlSelector': this.forwardMail,
           'replyControlSelector': this.replyToMail
         });
-        this.on(document, 'uiMailItemSelectionChanged', this.restyleOnSelectionChange);
-        this.on(document, 'uiFolderSelectionChanged', this.disableAll);
       });
     }
   }
