@@ -9,8 +9,8 @@ requirejs.config({
   baseUrl: '/base/app/js',
 
   paths: {
-    'flight': '/base/components/flight',
-    'mustache': '/base/components/mustache'
+    'flight': '/base/bower_components/flight',
+    'mustache': '/base/bower_components/mustache'
   },
 
   // ask Require.js to load these files (all our tests)

@@ -1,8 +1,8 @@
 requirejs.config({
   baseUrl: 'app/js',
   paths: {
-    'flight': '/components/flight',
-    'mustache': '/components/mustache'
+    'flight': '/bower_components/flight',
+    'mustache': '/bower_components/mustache'
   }
 });
 

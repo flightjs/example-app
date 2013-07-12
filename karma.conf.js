@@ -9,8 +9,8 @@ basePath = '';
 
 // list of files / patterns to load in the browser
 files = [
-  'components/es5-shim/es5-shim.js',
-  'components/es5-shim/es5-sham.js',
+  'bower_components/es5-shim/es5-shim.js',
+  'bower_components/es5-shim/es5-sham.js',
 
   // frameworks
   JASMINE,
@@ -19,13 +19,13 @@ files = [
   REQUIRE_ADAPTER,
 
   // loaded without require
-  'components/jquery/jquery.js',
-  'components/jasmine-jquery/lib/jasmine-jquery.js',
-  'components/jasmine-flight/lib/jasmine-flight.js',
+  'bower_components/jquery/jquery.js',
+  'bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+  'bower_components/jasmine-flight/lib/jasmine-flight.js',
 
   // loaded with require
-  {pattern: 'components/flight/**/*.js', included: false},
-  {pattern: 'components/mustache/**/*.js', included: false},
+  {pattern: 'bower_components/flight/**/*.js', included: false},
+  {pattern: 'bower_components/mustache/**/*.js', included: false},
   {pattern: 'app/**/*.js', included: false},
   {pattern: 'test/fixtures/**/*.html', included: false},
   {pattern: 'test/spec/**/*.js', included: false},
