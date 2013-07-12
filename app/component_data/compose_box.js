@@ -3,7 +3,7 @@
 define(
 
   [
-    'components/flight/lib/component',
+    'flight/lib/component',
     'components/mustache/mustache',
     'app/data',
     'app/templates'
