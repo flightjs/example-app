@@ -3,7 +3,7 @@
 define(
 
   [
-    'components/flight/lib/component',
+    'flight/lib/component',
     './with_select'
   ],
 

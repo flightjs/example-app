@@ -56,26 +56,5 @@
     <script src="components/es5-shim/es5-shim.js"></script>
     <script src="components/es5-shim/es5-sham.js"></script>
     <script data-main="requireMain.js" src="components/requirejs/require.js"></script>
-
-    <script>
-      require(
-        [
-          'components/flight/lib/compose',
-          'components/flight/lib/registry',
-          'components/flight/lib/advice',
-          'components/flight/lib/logger',
-          'components/flight/tools/debug/debug'
-        ],
-
-        function(compose, registry, advice, withLogging, debug) {
-          debug.enable(true);
-          compose.mixin(registry, [advice.withAdvice, withLogging]);
-          require(['app/boot/page'], function(initialize) {
-            initialize();
-          });
-        }
-      );
-    </script>
-
   </body>
 </html>
