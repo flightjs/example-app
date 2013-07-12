@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "flight-example-app",
+  "version": "0.0.0",
+  "dependencies": {
+    "flight": "~1.0.9",
+    "requirejs": "~2.1.5",
+    "jasmine-jquery": "~1.5.2",
+    "jasmine-flight": "~1.1.0",
+    "mustache": "~0.7.2"
+  },
+  "devDependencies": {
+    "jasmine-flight": "*",
+    "jasmine-jquery": "*"
+  }
+}
