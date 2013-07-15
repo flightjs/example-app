@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>compose_box.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="compose_box.html">
+                compose_box.js
+              </a>
+            
+              
+              <a class="source" href="mail_items.html">
+                mail_items.js
+              </a>
+            
+              
+              <a class="source" href="move_to.html">
+                move_to.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>compose_box.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="string">'use strict'</span>;
+
+define(
+
+  [
+    <span class="string">'components/flight/lib/component'</span>,
+    <span class="string">'components/mustache/mustache'</span>,
+    <span class="string">'app/data'</span>,
+    <span class="string">'app/templates'</span>
+  ],
+
+  <span class="keyword">function</span>(defineComponent, Mustache, dataStore, templates) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>create a component constructor augmented by the composeBox function (with no mixins)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> defineComponent(composeBox);
+
+    <span class="function"><span class="keyword">function</span> <span class="title">composeBox</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>attributes that are not expected to be modified, but can be overriden during attachTo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.defaultAttrs({
+        dataStore: dataStore,
+        recipientHintId: <span class="string">'recipient_hint'</span>,
+        subjectHint: <span class="string">'Subject'</span>,
+        messageHint: <span class="string">'Message'</span>,
+        toHint: <span class="string">'To'</span>,
+        forwardPrefix: <span class="string">'Fw'</span>,
+        replyPrefix: <span class="string">'Re'</span>
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>given a data set, render the compose box</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.serveComposeBox = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.trigger(<span class="string">"dataComposeBoxServed"</span>, {
+          markup: <span class="keyword">this</span>.renderComposeBox(data.type, data.relatedMailId),
+          type: data.type});
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>get the subject for replies and fwds</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.getSubject = <span class="keyword">function</span>(type, relatedMailId) {
+        <span class="keyword">var</span> relatedMail = <span class="keyword">this</span>.attr.dataStore.mail.filter(<span class="keyword">function</span>(each) {
+          <span class="keyword">return</span> each.id ==  relatedMailId;
+        })[<span class="number">0</span>];
+
+        <span class="keyword">var</span> subject = relatedMail &amp;&amp; relatedMail.subject;
+
+        <span class="keyword">var</span> subjectLookup = {
+          newMail: <span class="keyword">this</span>.attr.subjectHint,
+          forward: <span class="keyword">this</span>.attr.forwardPrefix + <span class="string">": "</span> + subject,
+          reply: <span class="keyword">this</span>.attr.replyPrefix + <span class="string">": "</span> + subject
+        }
+
+        <span class="keyword">return</span> subjectLookup[type];
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>populate the template view and apply it</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.renderComposeBox = <span class="keyword">function</span>(type, relatedMailId) {
+        <span class="keyword">var</span> recipientId = <span class="keyword">this</span>.getRecipientId(type, relatedMailId);
+        <span class="keyword">var</span> contacts = <span class="keyword">this</span>.attr.dataStore.contacts.map(<span class="keyword">function</span>(contact) {
+          contact.recipient = (contact.id == recipientId);
+          <span class="keyword">return</span> contact;
+        });
+
+        <span class="keyword">return</span> Mustache.render(templates.composeBox, {
+          newMail: type == <span class="string">'newMail'</span>,
+          reply: type == <span class="string">'reply'</span>,
+          subject: <span class="keyword">this</span>.getSubject(type, relatedMailId),
+          message: <span class="keyword">this</span>.attr.messageHint,
+          contacts: contacts
+        });
+      };
+
+      <span class="keyword">this</span>.getRecipientId = <span class="keyword">function</span>(type, relatedMailId) {
+        <span class="keyword">var</span> relatedMail = (type == <span class="string">'reply'</span>) &amp;&amp; <span class="keyword">this</span>.attr.dataStore.mail.filter(<span class="keyword">function</span>(each) {
+          <span class="keyword">return</span> each.id ==  relatedMailId;
+        })[<span class="number">0</span>];
+
+        <span class="keyword">return</span> relatedMail &amp;&amp; relatedMail.contact_id || <span class="keyword">this</span>.attr.recipientHintId;
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>update data source</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.send = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.attr.dataStore.mail.push({
+          id: String(Date.now()),
+          contact_id: data.to_id,
+          folders: [<span class="string">"sent"</span>],
+          time: Date.now(),
+          subject: data.subject,
+          message: data.message
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>we&#39;re done - let people know</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.trigger(<span class="string">'dataMailItemsRefreshRequested'</span>, {folder: data.currentFolder});
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>code to be run when the instance is created</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.after(<span class="string">"initialize"</span>, <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.on(<span class="string">"uiComposeBoxRequested"</span>, <span class="keyword">this</span>.serveComposeBox);
+        <span class="keyword">this</span>.on(<span class="string">"uiSendRequested"</span>, <span class="keyword">this</span>.send);
+      });
+    }
+
+  }
+);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>mail_items.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="compose_box.html">
+                compose_box.js
+              </a>
+            
+              
+              <a class="source" href="mail_items.html">
+                mail_items.js
+              </a>
+            
+              
+              <a class="source" href="move_to.html">
+                move_to.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>mail_items.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="string">'use strict'</span>;
+
+define(
+
+  [
+    <span class="string">'components/flight/lib/component'</span>,
+    <span class="string">'components/mustache/mustache'</span>,
+    <span class="string">'app/data'</span>,
+    <span class="string">'app/templates'</span>
+  ],
+
+  <span class="keyword">function</span>(defineComponent, Mustache, dataStore, templates) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>create a component constructor augmented by the mailItems function (with no mixins)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> defineComponent(mailItems);
+
+    <span class="function"><span class="keyword">function</span> <span class="title">mailItems</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>attributes that are not expected to be modified, but can be overriden during attachTo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.defaultAttrs({
+        folder: <span class="string">'inbox'</span>,
+        dataStore: dataStore
+      });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>render the mail items over the given data set</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.serveMailItems = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">var</span> folder = (data &amp;&amp; data.folder) || <span class="keyword">this</span>.attr.folder;
+        <span class="keyword">this</span>.trigger(<span class="string">"dataMailItemsServed"</span>, {markup: <span class="keyword">this</span>.renderItems(<span class="keyword">this</span>.assembleItems(folder))})
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>create a view and apply it to to the mailItem template</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.renderItems = <span class="keyword">function</span>(items) {
+        <span class="keyword">return</span> Mustache.render(templates.mailItem, {mailItems: items});
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>build the template view using items data</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.assembleItems = <span class="keyword">function</span>(folder) {
+        <span class="keyword">var</span> items = [];
+
+        <span class="keyword">this</span>.attr.dataStore.mail.forEach(<span class="keyword">function</span>(each) {
+          <span class="keyword">if</span> (each.folders &amp;&amp; each.folders.indexOf(folder) &gt; -<span class="number">1</span>) {
+            items.push(<span class="keyword">this</span>.getItemForView(each));
+          }
+        }, <span class="keyword">this</span>);
+
+        <span class="keyword">return</span> items;
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>format a data item for the template view</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.getItemForView = <span class="keyword">function</span>(itemData) {
+        <span class="keyword">var</span> thisItem, thisContact, msg
+
+        thisItem = {id: itemData.id, important: itemData.important};
+
+        thisContact = <span class="keyword">this</span>.attr.dataStore.contacts.filter(<span class="keyword">function</span>(contact) {
+          <span class="keyword">return</span> contact.id == itemData.contact_id
+        })[<span class="number">0</span>];
+        thisItem.name = [thisContact.firstName, thisContact.lastName].join(<span class="string">' '</span>);
+
+        <span class="keyword">var</span> subj = itemData.subject;
+        thisItem.formattedSubject = subj.length &gt; <span class="number">70</span> ? subj.slice(<span class="number">0</span>, <span class="number">70</span>) + <span class="string">"..."</span> : subj;
+
+        <span class="keyword">var</span> msg = itemData.message;
+        thisItem.formattedMessage = msg.length &gt; <span class="number">70</span> ? msg.slice(<span class="number">0</span>, <span class="number">70</span>) + <span class="string">"..."</span> : msg;
+
+        <span class="keyword">return</span> thisItem;
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>code to be run when the instance is created</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.after(<span class="string">"initialize"</span>, <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.on(<span class="string">"uiMailItemsRequested"</span>, <span class="keyword">this</span>.serveMailItems);
+        <span class="keyword">this</span>.on(<span class="string">"dataMailItemsRefreshRequested"</span>, <span class="keyword">this</span>.serveMailItems);
+      });
+    }
+  }
+);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

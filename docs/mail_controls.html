@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>mail_controls.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="compose_box.html">
+                compose_box.js
+              </a>
+            
+              
+              <a class="source" href="folders.html">
+                folders.js
+              </a>
+            
+              
+              <a class="source" href="mail_controls.html">
+                mail_controls.js
+              </a>
+            
+              
+              <a class="source" href="mail_items.html">
+                mail_items.js
+              </a>
+            
+              
+              <a class="source" href="move_to_selector.html">
+                move_to_selector.js
+              </a>
+            
+              
+              <a class="source" href="with_select.html">
+                with_select.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>mail_controls.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="string">'use strict'</span>;
+
+define(
+  [
+    <span class="string">'components/flight/lib/component'</span>
+  ],
+
+  <span class="keyword">function</span>(defineComponent) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>create a component constructor augmented by the composeBox function and withSelect mixin</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">return</span> defineComponent(mailControls);
+
+    <span class="function"><span class="keyword">function</span> <span class="title">mailControls</span><span class="params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>attributes that are not expected to be modified, but can be overriden during attachTo</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.defaultAttrs({</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>selectors</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        actionControlsSelector: <span class="string">'button.mail-action'</span>,
+        deleteControlSelector: <span class="string">'#delete_mail'</span>,
+        moveControlSelector: <span class="string">'#move_mail'</span>,
+        forwardControlSelector: <span class="string">'#forward'</span>,
+        replyControlSelector: <span class="string">'#reply'</span>,
+        singleItemActionSelector: <span class="string">'button.single-item'</span>
+      });
+
+      <span class="keyword">this</span>.disableAll = <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.select(<span class="string">'actionControlsSelector'</span>).attr(<span class="string">'disabled'</span>, <span class="string">'disabled'</span>);
+      };
+
+      <span class="keyword">this</span>.restyleOnSelectionChange = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">if</span> (data.selectedIds.length &gt; <span class="number">1</span>) {
+          <span class="keyword">this</span>.select(<span class="string">'actionControlsSelector'</span>).not(<span class="string">'button.single-item'</span>).removeAttr(<span class="string">'disabled'</span>);
+          <span class="keyword">this</span>.select(<span class="string">'singleItemActionSelector'</span>).attr(<span class="string">'disabled'</span>, <span class="string">'disabled'</span>);
+        } <span class="keyword">else</span> <span class="keyword">if</span> (data.selectedIds.length == <span class="number">1</span>) {
+          <span class="keyword">this</span>.select(<span class="string">'actionControlsSelector'</span>).removeAttr(<span class="string">'disabled'</span>);
+        } <span class="keyword">else</span> {
+          <span class="keyword">this</span>.disableAll();
+        }
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>message that user wants to delete mail</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.deleteMail = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.trigger(<span class="string">'uiDeleteMail'</span>);
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>message that user wants to move mail</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.moveMail = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.trigger(<span class="string">'uiMoveMail'</span>);
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>message that user wants to forward mail</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.forwardMail = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.trigger(<span class="string">'uiForwardMail'</span>);
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>message that user wants to reply to mail</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.replyToMail = <span class="keyword">function</span>(ev, data) {
+        <span class="keyword">this</span>.trigger(<span class="string">'uiReplyToMail'</span>);
+      };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>code to be run when the instance is created</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>.after(<span class="string">'initialize'</span>, <span class="keyword">function</span>() {
+        <span class="keyword">this</span>.on(document, <span class="string">'uiMailItemSelectionChanged'</span>, <span class="keyword">this</span>.restyleOnSelectionChange);
+        <span class="keyword">this</span>.on(document, <span class="string">'uiFolderSelectionChanged'</span>, <span class="keyword">this</span>.disableAll);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>delegate to specific handler based on event target</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">this</span>.on(<span class="string">'.mail-action'</span>, <span class="string">'click'</span>, {
+          <span class="string">'deleteControlSelector'</span>: <span class="keyword">this</span>.deleteMail,
+          <span class="string">'moveControlSelector'</span>: <span class="keyword">this</span>.moveMail,
+          <span class="string">'forwardControlSelector'</span>: <span class="keyword">this</span>.forwardMail,
+          <span class="string">'replyControlSelector'</span>: <span class="keyword">this</span>.replyToMail
+        });
+      });
+    }
+  }
+);</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
