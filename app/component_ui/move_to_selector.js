@@ -42,7 +42,6 @@ define(
       };
 
       this.hideSelector = function() {
-        debugger;
         this.off(document, 'click', this.hideSelector);
         this.$node.hide();
       }
