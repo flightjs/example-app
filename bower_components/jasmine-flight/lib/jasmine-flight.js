@@ -19,8 +19,12 @@
     jasmine.getEnv().describeComponent(componentPath, specDefinitions);
   };
 
-  jasmine.Env.prototype.describeComponent = function (componentPath, specDefinitions) {
-    describe(componentPath, function () {
+  root.ddescribeComponent = function (componentPath, specDefinitions) {
+    jasmine.getEnv().ddescribeComponent(componentPath, specDefinitions);
+  };
+
+  var describeComponentFactory = function (componentPath, specDefinitions) {
+    return function () {
       beforeEach(function () {
         this.Component = this.component = this.$node = null;
 
@@ -59,7 +63,15 @@
       });
 
       specDefinitions.apply(this);
-    });
+    };
+  };
+
+  jasmine.Env.prototype.describeComponent = function (componentPath, specDefinitions) {
+    describe(componentPath, describeComponentFactory(componentPath, specDefinitions));
+  };
+
+  jasmine.Env.prototype.ddescribeComponent = function (componentPath, specDefinitions) {
+    ddescribe(componentPath, describeComponentFactory(componentPath, specDefinitions));
   };
 
   /**
@@ -73,8 +85,12 @@
     jasmine.getEnv().describeMixin(mixinPath, specDefinitions);
   };
 
-  jasmine.Env.prototype.describeMixin = function (mixinPath, specDefinitions) {
-    describe(mixinPath, function () {
+  root.ddescribeMixin = function (mixinPath, specDefinitions) {
+    jasmine.getEnv().ddescribeMixin(mixinPath, specDefinitions);
+  };
+
+  var describeMixinFactory = function (mixinPath, specDefinitions) {
+    return function () {
       beforeEach(function () {
         this.Component = this.component = this.$node = null;
 
@@ -113,7 +129,15 @@
       });
 
       specDefinitions.apply(this);
-    });
+    };
+  };
+
+  jasmine.Env.prototype.describeMixin = function (mixinPath, specDefinitions) {
+    describe(mixinPath, describeMixinFactory(mixinPath, specDefinitions));
+  };
+
+  jasmine.Env.prototype.ddescribeMixin = function (mixinPath, specDefinitions) {
+    ddescribe(mixinPath, describeMixinFactory(mixinPath, specDefinitions));
   };
 
   /**
@@ -165,26 +189,26 @@
       this.$node.remove();
     }
 
-    this.$node = $('<div class="component-root" />');
-    $('body').append(this.$node);
-
     if (fixture instanceof jQuery || typeof fixture === 'string') {
-      this.$node.append(fixture);
+      this.$node = $(fixture).addClass('component-root');
     } else {
+      this.$node = $('<div class="component-root" />');
       options = fixture;
       fixture = null;
     }
 
+    $('body').append(this.$node);
+
     options = options === undefined ? {} : options;
 
-    this.component = new this.Component(this.$node, options);
+    this.component = (new this.Component()).initialize(this.$node, options);
   };
 
 
   (function (namespace) {
     var eventsData = {
       spiedEvents: {},
-      handlers:    []
+      handlers: []
     };
 
     namespace.formatElement = function ($element) {
@@ -192,7 +216,7 @@
       var output = '';
 
       if ($element instanceof jQuery) {
-        output = jasmine.JQuery.elementToString($element);
+        output = jasmine.jQuery.elementToString($element);
         if (output.length > limit) {
           output = output.slice(0, 200) + '...';
         }
@@ -243,7 +267,7 @@
         };
 
         jQuery(selector).on(eventName, handler);
-        eventsData.handlers.push(handler);
+        eventsData.handlers.push([selector, eventName, handler]);
         return eventsData.spiedEvents[[selector, eventName]];
       },
 
@@ -295,6 +319,10 @@
 
       cleanUp: function () {
         eventsData.spiedEvents = {};
+        // unbind all handlers
+        for (var i = 0; i < eventsData.handlers.length; i++) {
+          jQuery(eventsData.handlers[i][0]).off(eventsData.handlers[i][1], eventsData.handlers[i][2]);
+        }
         eventsData.handlers    = [];
       }
     };
@@ -303,7 +331,7 @@
       var validHash;
       for (var field in a) {
         if ((typeof a[field] === 'object') && (typeof b[field] === 'object')) {
-          validHash = jasmine.flight.validateHash(a[field], b[field]);
+          validHash = a[field] === b[field] || jasmine.flight.validateHash(a[field], b[field]);
         } else if (intersection && (typeof a[field] === 'undefined' || typeof b[field] === 'undefined')) {
           validHash = true;
         } else {
@@ -314,6 +342,58 @@
         }
       }
       return validHash;
+    };
+
+    namespace.assertEventTriggeredWithData = function (selector, expectedArg, fuzzyMatch) {
+        var eventName = typeof this.actual === 'string' ? this.actual : this.actual.name;
+        var wasTriggered = jasmine.flight.events.wasTriggered(selector, eventName);
+
+        this.message = function () {
+          var $pp = function (obj) {
+            var description;
+            var attr;
+
+            if (!(obj instanceof jQuery)) {
+              obj = $(obj);
+            }
+
+            description = [
+              obj.get(0).nodeName
+            ];
+
+            attr = obj.get(0).attributes || [];
+
+            for (var x = 0; x < attr.length; x++) {
+              description.push(attr[x].name + '="' + attr[x].value + '"');
+            }
+
+            return '<' + description.join(' ') + '>';
+          };
+
+          if (wasTriggered) {
+            var actualArg = jasmine.flight.events.eventArgs(selector, eventName, expectedArg)[1];
+            return [
+              '<div class="value-mismatch">Expected event ' + eventName + ' to have been triggered on' + selector,
+              '<div class="value-mismatch">Expected event ' + eventName + ' not to have been triggered on' + selector
+            ];
+          } else {
+            return [
+              'Expected event ' + eventName + ' to have been triggered on ' + $pp(selector),
+              'Expected event ' + eventName + ' not to have been triggered on ' + $pp(selector)
+            ];
+          }
+        };
+
+        if (!wasTriggered) {
+          return false;
+        }
+
+        if (fuzzyMatch) {
+          return jasmine.flight.events.wasTriggeredWithData(selector, eventName, expectedArg, this.env);
+        } else {
+          return jasmine.flight.events.wasTriggeredWith(selector, eventName, expectedArg, this.env);
+        }
+
     };
   })(jasmine.flight);
 
@@ -362,57 +442,12 @@
         return wasTriggered;
       },
 
-      toHaveBeenTriggeredOnAndWith: function () {
-        var selector = arguments[0];
-        var expectedArg = arguments[1];
-        var exactMatch = !arguments[2];
-        var wasTriggered = jasmine.flight.events.wasTriggered(selector, this.actual);
+      toHaveBeenTriggeredOnAndWith: function (selector, expectedArg, fuzzyMatch) {
+        return jasmine.flight.assertEventTriggeredWithData.call(this, selector, expectedArg, fuzzyMatch);
+      },
 
-        this.message = function () {
-          var $pp = function (obj) {
-            var description;
-            var attr;
-
-            if (!(obj instanceof jQuery)) {
-              obj = $(obj);
-            }
-
-            description = [
-              obj.get(0).nodeName
-            ];
-
-            attr = obj.get(0).attributes || [];
-
-            for (var x = 0; x < attr.length; x++) {
-              description.push(attr[x].name + '="' + attr[x].value + '"');
-            }
-
-            return '<' + description.join(' ') + '>';
-          };
-
-          if (wasTriggered) {
-            var actualArg = jasmine.flight.events.eventArgs(selector, this.actual, expectedArg)[1];
-            return [
-              '<div class="value-mismatch">Expected event ' + this.actual.name + ' to have been triggered on' + selector,
-              '<div class="value-mismatch">Expected event ' + this.actual.name + ' not to have been triggered on' + selector
-            ];
-          } else {
-            return [
-              'Expected event ' + this.actual.name + ' to have been triggered on ' + $pp(selector),
-              'Expected event ' + this.actual.name + ' not to have been triggered on ' + $pp(selector)
-            ];
-          }
-        };
-
-        if (!wasTriggered) {
-          return false;
-        }
-
-        if (exactMatch) {
-          return jasmine.flight.events.wasTriggeredWith(selector, this.actual, expectedArg, this.env);
-        } else {
-          return jasmine.flight.events.wasTriggeredWithData(selector, this.actual, expectedArg, this.env);
-        }
+      toHaveBeenTriggeredOnAndWithFuzzy: function (selector, expectedArg) {
+        return jasmine.flight.assertEventTriggeredWithData.call(this, selector, expectedArg, true);
       },
 
       toHaveCss: function (prop, val) {
@@ -437,8 +472,12 @@
   });
 
   root.spyOnEvent = function (selector, eventName) {
-    jasmine.JQuery.events.spyOn(selector, eventName);
+    jasmine.jQuery.events.spyOn(selector, eventName);
     return jasmine.flight.events.spyOn(selector, eventName);
   };
+
+  afterEach(function () {
+    jasmine.flight.events.cleanUp();
+  });
 
 }(this));

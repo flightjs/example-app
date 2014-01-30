@@ -23,7 +23,7 @@ describeComponent('app/component_ui/move_to_selector', function() {
     window.setTimeout(function() {
       this.component.trigger('click');
       expect(this.component.$node).not.toBeVisible();
-    }.bind(this),0);
+    }.bind(this),1000);
   });
 
   it('requests move when folder selected', function() {

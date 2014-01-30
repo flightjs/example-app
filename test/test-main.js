@@ -9,7 +9,7 @@ requirejs.config({
   baseUrl: '/base',
 
   paths: {
-    'flight': 'components/flight'
+    'flight': 'bower_components/flight'
   },
 
   // ask Require.js to load these files (all our tests)

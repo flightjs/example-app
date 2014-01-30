@@ -21,5 +21,16 @@
     "karma.conf.js",
     "CONTRIBUTING.md",
     "CHANGELOG.md"
-  ]
+  ],
+  "homepage": "https://github.com/flightjs/jasmine-flight",
+  "_release": "2.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.2.0",
+    "commit": "3af47a6febe2d27b71de234d9dcf47e1f7b2b7e5"
+  },
+  "_source": "git://github.com/flightjs/jasmine-flight.git",
+  "_target": "~2.2.0",
+  "_originalSource": "jasmine-flight",
+  "_direct": true
 }

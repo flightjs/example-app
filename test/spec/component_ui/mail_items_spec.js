@@ -2,15 +2,15 @@
 
 describeComponent('app/component_ui/mail_items', function() {
   beforeEach(function() {
-    setupComponent('<div id="container"></>', {
-      itemContainerSelector: '#container',
+    setupComponent('<table id="container"><tbody id="container-tb"></tbody></table>', {
+      itemContainerSelector: '#container-tb',
       deleteFolder: 'delete',
       selectedFolders: ['inbox'],
       selectedMailItems: [2, 3]});
   });
 
   it('should render mail data in items container', function() {
-    this.component.attr.itemContainerSelector = '#container';
+    this.component.attr.itemContainerSelector = '#container-tb';
     this.component.trigger('dataMailItemsServed', {markup: readFixtures('mail_items.html')});
     expect(this.component.select('itemContainerSelector').find('tr').length).toBe(3);
   });

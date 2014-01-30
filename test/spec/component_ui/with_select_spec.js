@@ -2,7 +2,8 @@
 
 describeMixin('app/component_ui/with_select', function() {
   beforeEach(function() {
-    setupComponent(readFixtures('mail_items.html'), {
+    setupComponent($('<table>' + readFixtures('mail_items.html') + '</table>'), {
+      itemSelector: 'tr.mail-item',
       selectedItemSelector: 'tr.mail-item.selected',
       selectionChangedEvent: 'testSelectionChangedEvent',
       selectedClass: 'selected'
@@ -74,6 +75,7 @@ describeMixin('app/component_ui/with_select', function() {
   it('adds selected items to selectedIds when initializeSelections called', function() {
     $('#mail_1').addClass(this.component.attr.selectedClass);
     $('#mail_2').addClass(this.component.attr.selectedClass);
+    debugger;
     this.component.initializeSelections();
     expect(this.component.getSelectedIds()).toEqual(['mail_1', 'mail_2']);
   });

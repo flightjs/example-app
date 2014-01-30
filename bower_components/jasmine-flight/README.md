@@ -17,6 +17,17 @@ bower install --save-dev jasmine-flight
 [jasmine](https://github.com/pivotal/jasmine) and
 [jasmine-jquery](https://github.com/velesin/jasmine-jquery)
 
+jasmine-flight assumes you'll be using RequireJS to load Flight modules, and
+that you've configured the Flight directory path. For example:
+
+```javascript
+requirejs.config({
+  paths: {
+    flight: 'bower_components/flight'
+  }
+});
+```
+
 ## Components
 
 ```javascript
@@ -137,6 +148,7 @@ review the [guidelines for contributing](CONTRIBUTING.md).
 * [@esbie](http://github.com/esbie) and
   [@skilldrick](http://github.com/skilldrick) for creating the original
   `describeComponent` & `describeMixin` methods.
+* [@necolas](http://github.com/necolas) for ongoing support & development
 
 ## License
 
