@@ -4,19 +4,18 @@
 // http://opensource.org/licenses/MIT
 // ==========================================
 
-"use strict";
-
 define(
 
   [
     './utils',
-    '../tools/debug/debug'
+    './debug'
   ],
 
-  function(util, debug) {
+  function(utils, debug) {
+    'use strict';
 
     //enumerables are shims - getOwnPropertyDescriptor shim doesn't work
-    var canWriteProtect = debug.enabled && !util.isEnumerable(Object, 'getOwnPropertyDescriptor');
+    var canWriteProtect = debug.enabled && !utils.isEnumerable(Object, 'getOwnPropertyDescriptor');
     //whitelist of unlockable property names
     var dontLock = ['mixedIn'];
 

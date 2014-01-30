@@ -4,15 +4,12 @@
 // http://opensource.org/licenses/MIT
 // ==========================================
 
-"use strict";
-
 define(
 
-  [
-    './utils'
-  ],
+  [],
 
-  function (util) {
+  function() {
+    'use strict';
 
     function parseEventArgs(instance, args) {
       var element, type, callback;
@@ -71,22 +68,22 @@ define(
           this.attachedTo.push(instance.node);
 
           return instanceInfo;
-        }
+        };
 
         this.removeInstance = function(instance) {
           delete this.instances[instance.identity];
           var indexOfNode = this.attachedTo.indexOf(instance.node);
           (indexOfNode > -1) && this.attachedTo.splice(indexOfNode, 1);
 
-          if (!this.instances.length) {
+          if (!Object.keys(this.instances).length) {
             //if I hold no more instances remove me from registry
             registry.removeComponentInfo(this);
           }
-        }
+        };
 
         this.isAttachedTo = function(node) {
           return this.attachedTo.indexOf(node) > -1;
-        }
+        };
       }
 
       function InstanceInfo(instance) {
@@ -104,7 +101,7 @@ define(
               this.events.splice(i, 1);
             }
           }
-        }
+        };
       }
 
       this.addInstance = function(instance) {
@@ -135,7 +132,7 @@ define(
 
       this.removeComponentInfo = function(componentInfo) {
         var index = this.components.indexOf(componentInfo);
-        (index > -1)  && this.components.splice(index, 1);
+        (index > -1) && this.components.splice(index, 1);
       };
 
       this.findComponentInfo = function(which) {
@@ -151,18 +148,18 @@ define(
       };
 
       this.findInstanceInfo = function(instance) {
-          return this.allInstances[instance.identity] || null;
+        return this.allInstances[instance.identity] || null;
       };
 
       this.findInstanceInfoByNode = function(node) {
-          var result = [];
-          Object.keys(this.allInstances).forEach(function(k) {
-            var thisInstanceInfo = this.allInstances[k];
-            if(thisInstanceInfo.instance.node === node) {
-              result.push(thisInstanceInfo);
-            }
-          }, this);
-          return result;
+        var result = [];
+        Object.keys(this.allInstances).forEach(function(k) {
+          var thisInstanceInfo = this.allInstances[k];
+          if (thisInstanceInfo.instance.node === node) {
+            result.push(thisInstanceInfo);
+          }
+        }, this);
+        return result;
       };
 
       this.on = function(componentOn) {
@@ -183,26 +180,31 @@ define(
         }
       };
 
-      this.off = function(el, type, callback) {
+      this.off = function(/*el, type, callback*/) {
         var event = parseEventArgs(this, arguments),
             instance = registry.findInstanceInfo(this);
 
         if (instance) {
           instance.removeBind(event);
         }
+
+        //remove from global event registry
+        for (var i = 0, e; e = registry.events[i]; i++) {
+          if (matchEvent(e, event)) {
+            registry.events.splice(i, 1);
+          }
+        }
       };
 
-      //debug tools may want to add advice to trigger
-      if (window.DEBUG && DEBUG.enabled) {
-        registry.trigger = new Function;
-      }
+      // debug tools may want to add advice to trigger
+      registry.trigger = function() {};
 
       this.teardown = function() {
         registry.removeInstance(this);
       };
 
       this.withRegistration = function() {
-        this.before('initialize', function() {
+        this.after('initialize', function() {
           registry.addInstance(this);
         });
 
@@ -210,7 +212,7 @@ define(
         this.after('off', registry.off);
         //debug tools may want to add advice to trigger
         window.DEBUG && DEBUG.enabled && this.after('trigger', registry.trigger);
-        this.after('teardown', {obj:registry, fnName:'teardown'});
+        this.after('teardown', {obj: registry, fnName: 'teardown'});
       };
 
     }
