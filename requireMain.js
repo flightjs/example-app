@@ -1,7 +1,7 @@
 requirejs.config({
   baseUrl: '',
   paths: {
-    'flight': 'components/flight'
+    'flight': 'bower_components/flight'
   }
 });
 

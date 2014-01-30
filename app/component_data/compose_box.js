@@ -4,7 +4,7 @@ define(
 
   [
     'flight/lib/component',
-    'components/mustache/mustache',
+    'bower_components/mustache/mustache',
     'app/data',
     'app/templates'
   ],
