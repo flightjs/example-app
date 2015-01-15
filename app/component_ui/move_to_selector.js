@@ -37,7 +37,7 @@ define(
         });
         window.setTimeout(
           (function() {
-            this.on(document, 'click', this.hideSelector)
+            this.on(document, 'click', this.hideSelector);
           }).bind(this), 0);
       };
 
