@@ -21,6 +21,7 @@ define(
         selectedMailItems: [],
         selectedFolders: [],
         //selectors
+        itemContainerSelector: null,
         itemSelector: 'tr.mail-item',
         selectedItemSelector: 'tr.mail-item.selected'
       });
