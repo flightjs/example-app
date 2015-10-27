@@ -23,7 +23,7 @@ define(
       });
 
       this.fetchMailItems = function(ev, data) {
-          this.trigger('uiMailItemsRequested', {folder: data.selectedIds[0]});
+        this.trigger('uiMailItemsRequested', {folder: data.selectedIds[0]});
       }
 
       this.after('initialize', function() {
