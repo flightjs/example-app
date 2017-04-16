@@ -1,3 +1,6 @@
+.mail-item {
+ cursor: pointer; 
+}
 .modal.fade.in {
   left: 5%;
   top: 10%;
